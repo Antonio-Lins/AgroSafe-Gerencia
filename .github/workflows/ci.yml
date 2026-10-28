@@ -1,0 +1,33 @@
+name: CI
+
+# Roda em todo pull request e em pushes na branch principal.
+# O resultado aparece como "check" no próprio pull request.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend (build + testes)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      # Arquivos commitados no Windows perdem a permissão de execução no Git.
+      # Sem esta linha, o Linux do GitHub recusa rodar o ./mvnw.
+      - name: Dar permissão de execução ao Maven Wrapper
+        run: chmod +x mvnw
+
+      # "verify" compila e executa os testes. Teste falhando reprova o job (e o PR).
+      - name: Compilar e testar
+        run: ./mvnw -B verify
