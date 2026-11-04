@@ -36,7 +36,7 @@ Dessa forma, o AgroSafe busca integrar conhecimentos técnicos de desenvolviment
 
 ## ⚙ Tecnologias utilizadas
 
-- **Java 21** — Linguagem de programação.
+- **Java 25** — Linguagem de programação.
 - **Spring Boot 4.1.2** — Framework principal do backend.
 - **Spring Web MVC** — Desenvolvimento da API REST.
 - **Spring Data JPA** — Persistência de dados.
@@ -77,7 +77,7 @@ O backend segue uma arquitetura organizada em camadas:
 
 ### Pré-requisitos
 
-- Java 21
+- Java 25
 - Maven ou Maven Wrapper
 - IntelliJ IDEA ou outra IDE compatível
 - Banco de dados configurado conforme o ambiente
@@ -133,8 +133,22 @@ O Swagger UI também pode ser utilizado para testes manuais dos endpoints dispon
 
 O AgroSafe está em desenvolvimento acadêmico, com implementação incremental das funcionalidades e integração contínua
 
-## Equipe de Desenvolvimento
+## Papéis em cada release
 
- **[Antonio Lins](https://github.com/Antonio-Lins)** \
- **[João Gabriel Caetano](https://github.com/21jann12)**\
- **[Joaquim Laureano ](https://github.com/JoaquimLG)** 
+### release 1
+
+ **QA: [Antonio Lins](https://github.com/Antonio-Lins)** \
+ **SM: [João Gabriel Caetano](https://github.com/21jann12)**\
+ **PO + DevOps: [Joaquim Laureano ](https://github.com/JoaquimLG)** 
+
+**SM: [Antonio Lins](https://github.com/Antonio-Lins)** \
+**PO + DevOps: [João Gabriel Caetano](https://github.com/21jann12)**\
+**QA: [Joaquim Laureano ](https://github.com/JoaquimLG)** 
+
+**PO + DevOps: [Antonio Lins](https://github.com/Antonio-Lins)** \
+**QA: [João Gabriel Caetano](https://github.com/21jann12)**\
+**SM: [Joaquim Laureano ](https://github.com/JoaquimLG)** 
+
+**QA: [Antonio Lins](https://github.com/Antonio-Lins)** \
+**SM: [João Gabriel Caetano](https://github.com/21jann12)**\
+**PO + DevOps[Joaquim Laureano ](https://github.com/JoaquimLG)** 
