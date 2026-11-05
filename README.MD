@@ -135,19 +135,26 @@ O AgroSafe está em desenvolvimento acadêmico, com implementação incremental 
 
 ## Papéis em cada release
 
-### release 1
+### Release 1
 
  **QA: [Antonio Lins](https://github.com/Antonio-Lins)** \
  **SM: [João Gabriel Caetano](https://github.com/21jann12)**\
  **PO + DevOps: [Joaquim Laureano ](https://github.com/JoaquimLG)** 
 
+
+### Release 2
+
 **SM: [Antonio Lins](https://github.com/Antonio-Lins)** \
 **PO + DevOps: [João Gabriel Caetano](https://github.com/21jann12)**\
 **QA: [Joaquim Laureano ](https://github.com/JoaquimLG)** 
 
+### Release 3
+
 **PO + DevOps: [Antonio Lins](https://github.com/Antonio-Lins)** \
 **QA: [João Gabriel Caetano](https://github.com/21jann12)**\
 **SM: [Joaquim Laureano ](https://github.com/JoaquimLG)** 
+
+### Release 4
 
 **QA: [Antonio Lins](https://github.com/Antonio-Lins)** \
 **SM: [João Gabriel Caetano](https://github.com/21jann12)**\
