@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "defensivos")
 public class Defensivo {
@@ -33,6 +35,10 @@ public class Defensivo {
         this.nomeComercial = nomeComercial;
         this.principioAtivo = principioAtivo;
         this.diasCarencia = diasCarencia;
+    }
+
+    public LocalDate calcularDataLiberacao(LocalDate dataAplicacao) {
+        return dataAplicacao.plusDays(diasCarencia);
     }
 
     public Long getId() {
