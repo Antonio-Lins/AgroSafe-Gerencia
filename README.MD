@@ -94,6 +94,89 @@ Por padrão, a API estará disponível em:
 
 `http://localhost:8080`
 
+## Configuração do PostgreSQL
+
+O backend do AgroSafe utiliza PostgreSQL para persistência de dados.
+
+### Pré-requisitos
+- PostgreSQL instalado e em execução.
+- Java e Maven configurados conforme o projeto.
+- Banco e usuário de aplicação criados.
+
+### 1. Criar o banco de dados
+
+No pgAdmin, abra o Query Tool conectado ao banco administrativo `postgres` e execute:
+
+```sql
+CREATE ROLE agrosafe_user
+WITH LOGIN PASSWORD 'SENHA_ESCOLHIDA';
+
+CREATE DATABASE agrosafe_db
+OWNER agrosafe_user;
+```
+
+Substitua `SENHA_ESCOLHIDA` por uma senha forte. Caso o banco e o usuário já existam, não é necessário criá-los novamente.
+
+### 2. Configurar a variável de ambiente
+
+No terminal PowerShell:
+
+```powershell
+$env:DB_PASSWORD = 'SENHA_ESCOLHIDA'
+```
+
+No Git Bash:
+
+```bash
+export DB_PASSWORD='SENHA_ESCOLHIDA'
+```
+
+A senha não deve ser adicionada ao código-fonte ou enviada ao GitHub.
+
+### 3. Iniciar o backend
+
+Entre na pasta `backend` e execute:
+
+PowerShell:
+
+```powershell
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=postgres"
+```
+
+Git Bash:
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=postgres
+```
+
+O backend utiliza a configuração disponível no arquivo `application-postgres.properties`.
+
+### 4. Verificar a conexão
+
+Abra o pgAdmin e acesse:
+
+`Databases → agrosafe_db → Schemas → public → Tables`
+
+Verifique se as tabelas da aplicação foram criadas.
+
+Para testar uma consulta:
+
+```sql
+SELECT id, nome, email, perfil
+FROM usuarios;
+```
+
+### 5. Falhas de conexão
+
+Caso o backend não consiga conectar ao PostgreSQL, confira:
+- Se o serviço PostgreSQL está em execução.
+- Se a porta configurada é `5432`.
+- Se o banco `agrosafe_db` existe.
+- Se o usuário `agrosafe_user` está correto.
+- Se a variável `DB_PASSWORD` contém a senha correta.
+
+Mensagens de erro de autenticação ou conexão podem ser consultadas no console de execução do Spring Boot.
+
 ##  Documentação da API — Swagger
 
 O AgroSafe utiliza Swagger UI para documentação e testes dos endpoints REST.
