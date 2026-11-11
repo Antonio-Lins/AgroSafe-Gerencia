@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "aplicacoes")
@@ -26,6 +27,11 @@ public class Aplicacao {
     @JoinColumn(name = "defensivo_id")
     private Defensivo defensivo;
 
+    // Usuário que registrou a aplicação (RF02)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
     @Column(name = "data_aplicacao", nullable = false)
     private LocalDate dataAplicacao;
 
@@ -35,8 +41,27 @@ public class Aplicacao {
     @Column(nullable = false)
     private boolean cancelada = false;
 
+    @Column(name = "motivo_cancelamento", length = 500)
+    private String motivoCancelamento;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cancelada_por_id")
+    private Usuario canceladaPor;
+
+    @Column(name = "cancelada_em")
+    private LocalDateTime canceladaEm;
+
     protected Aplicacao() {
         // exigido pelo JPA
+    }
+
+    public Aplicacao(Talhao talhao, Defensivo defensivo, Usuario usuario,
+                     LocalDate dataAplicacao, LocalDate dataLiberacaoCalculada) {
+        this.talhao = talhao;
+        this.defensivo = defensivo;
+        this.usuario = usuario;
+        this.dataAplicacao = dataAplicacao;
+        this.dataLiberacaoCalculada = dataLiberacaoCalculada;
     }
 
     public Long getId() {
@@ -51,6 +76,10 @@ public class Aplicacao {
         return defensivo;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
     public LocalDate getDataAplicacao() {
         return dataAplicacao;
     }
@@ -61,5 +90,17 @@ public class Aplicacao {
 
     public boolean isCancelada() {
         return cancelada;
+    }
+
+    public String getMotivoCancelamento() {
+        return motivoCancelamento;
+    }
+
+    public Usuario getCanceladaPor() {
+        return canceladaPor;
+    }
+
+    public LocalDateTime getCanceladaEm() {
+        return canceladaEm;
     }
 }
