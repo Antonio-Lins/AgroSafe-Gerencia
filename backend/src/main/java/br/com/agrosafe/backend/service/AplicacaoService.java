@@ -35,12 +35,12 @@ public class AplicacaoService {
     }
 
     /**
-     * US-09 (RF02, RN02): registra a aplicação, calcula e grava a data de liberação
-     * e associa a aplicação ao usuário autenticado.
+     * US-09 (RF02, RN02): registra a aplicação, calcula e grava a data de liberação e associa
+     * a aplicação ao usuário autenticado.
+     * US-10 (RN03): atualiza a data de liberação do talhão, que passa a ser a maior entre as
+     * suas aplicações.
      *
-     * A atualização da data de liberação do talhão (RN03) é da US-10 e deve entrar neste
-     * mesmo método, dentro da mesma transação (driver D3). A rejeição de data futura (RN07)
-     * é da US-11.
+     * A rejeição de data futura (RN07) é da US-11.
      */
     @Transactional
     public AplicacaoResponse registrar(AplicacaoRequest request, String emailUsuario) {
@@ -55,8 +55,14 @@ public class AplicacaoService {
         LocalDate dataLiberacao = defensivo.calcularDataLiberacao(request.dataAplicacao());
         Aplicacao aplicacao = new Aplicacao(talhao, defensivo, usuario,
                 request.dataAplicacao(), dataLiberacao);
+        Aplicacao salva = aplicacaoRepository.save(aplicacao);
 
-        return AplicacaoResponse.de(aplicacaoRepository.save(aplicacao));
+        // RN03: a aplicação e a data do talhão são gravadas na mesma transação.
+        // Se qualquer uma falhar, nenhuma das duas alterações vale (driver D3).
+        talhao.atualizarLiberacaoSeMaior(dataLiberacao);
+        talhaoRepository.save(talhao);
+
+        return AplicacaoResponse.de(salva);
     }
 
     private BusinessException referenciaInexistente(String mensagem) {
