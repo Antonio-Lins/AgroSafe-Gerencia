@@ -1,7 +1,7 @@
 # Ata de Sprint Retrospective - Sprint 2 (AgroSafe)
 
 * **Projeto:** AgroSafe · **Release:** 2 · **Sprint:** 2
-* **Data:** 12/11/2026
+* **Data:** 11/11/2026
 * **Horário (Timebox):** 18:45 às 19:30 (45 minutos)
 * **Participantes:** João Gabriel, Joaquim Laureano, Antonio Lins
 
@@ -15,8 +15,8 @@
 
 ### Resumo da sprint (contexto)
 * Meta: aplicação e colheita com regra de quarentena, banco PostgreSQL e início do frontend (EP03, EP04 e EP05, US-09 a US-16).
-* Entregue: 32 de 40 pts · USs concluídas: 6/8 (US-09, US-11, US-12, US-13, US-15 e US-16).
-* Não concluídas: US-10 (em revisão, fora da `main`) e US-14 (parcial, só a tela de login).
+* Entregue: 37 de 40 pts · USs concluídas: 7/8 (US-09, US-10, US-11, US-12, US-13, US-15 e US-16).
+* Não concluídas: US-14 (parcial, só a tela de login).
 
 ### O que foi bem (manter)
 | # | Ponto |
@@ -35,9 +35,9 @@
 | 4 | Versões de ferramentas divergentes entre documentos (problema que já tinha aparecido na Sprint 1) |
 
 ### Métricas
-* **Métricas:** a previsibilidade caiu em relação à Sprint 1 (49 de 49 pts, 100 %). Nesta sprint foram 32 de 40 pts, 80 %, e a queima de escopo ficou concentrada no fim.
+* **Métricas:** a previsibilidade caiu em relação à Sprint 1 (49 de 49 pts, 100 %). Nesta sprint foram 37 de 40 pts, 92,5 %, e a queima de escopo ficou concentrada no fim.
 * **Riscos Revistos:** os 9 riscos foram revisados e o status de cada um está na seção 5.
-* **Velocity da Sprint:** 32 pontos entregues (vs. 40 planejados).
+* **Velocity da Sprint:** 37 pontos entregues (vs. 40 planejados).
 * **Análise do Burndown:** na véspera do fim da sprint (11/11), 3 tickets (16 pts) estavam em revisão e 5 (24 pts) em andamento, sem nenhum concluído. O gráfico de burndown do Jira deve mostrar queda tardia, o que reduz a previsibilidade e deixa pouco tempo para a revisão dos PRs.
 * **Conclusões para o próximo ciclo:** mapear as dependências entre USs antes de distribuir o trabalho, abrir PRs menores ao longo da sprint e quebrar USs grandes (as de 8 pontos, US-09 e US-13, concentraram boa parte do risco).
 
