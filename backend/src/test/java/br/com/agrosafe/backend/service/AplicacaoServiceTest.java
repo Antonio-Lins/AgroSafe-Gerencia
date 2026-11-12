@@ -19,7 +19,9 @@ import br.com.agrosafe.backend.repository.DefensivoRepository;
 import br.com.agrosafe.backend.repository.TalhaoRepository;
 import br.com.agrosafe.backend.repository.UsuarioRepository;
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +36,8 @@ class AplicacaoServiceTest {
 
     private static final String EMAIL = "operador@fazenda.com";
     private static final LocalDate DATA = LocalDate.of(2026, 10, 1);
+    private static final LocalDate HOJE = LocalDate.of(2026, 11, 11);
+    private static final ZoneId FUSO = ZoneId.of("America/Fortaleza");
 
     @Mock
     private AplicacaoRepository aplicacaoRepository;
@@ -55,7 +59,8 @@ class AplicacaoServiceTest {
     @BeforeEach
     void setUp() {
         service = new AplicacaoService(aplicacaoRepository, talhaoRepository,
-                defensivoRepository, usuarioRepository);
+                defensivoRepository, usuarioRepository,
+                Clock.fixed(HOJE.atStartOfDay(FUSO).toInstant(), FUSO));
     }
 
     // ---------- US-09: registrar com cálculo da data de liberação ----------
@@ -169,11 +174,50 @@ class AplicacaoServiceTest {
         assertThat(resposta.dataLiberacaoTalhao()).isEqualTo(LocalDate.of(2026, 10, 20));
     }
 
+    @Test
+    void registrar_comDataFutura_recusaCom422ENaoSalva() {
+        AplicacaoRequest futura = new AplicacaoRequest(1L, 2L, HOJE.plusDays(1));
+
+        assertThatThrownBy(() -> service.registrar(futura, EMAIL))
+                .isInstanceOfSatisfying(BusinessException.class,
+                        ex -> assertThat(ex.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY))
+                .hasMessageContaining("futura");
+        verify(aplicacaoRepository, never()).save(any(Aplicacao.class));
+    }
+
+    @Test
+    void registrar_comDataDeHoje_eAceita() {
+        when(talhaoRepository.findById(1L)).thenReturn(Optional.of(new Talhao("A1", BigDecimal.TEN, "Soja")));
+        when(defensivoRepository.findById(2L))
+                .thenReturn(Optional.of(new Defensivo("Produto A", "Glifosato", 10)));
+        when(usuarioRepository.findByEmailIgnoreCase(EMAIL)).thenReturn(Optional.of(usuario));
+        when(aplicacaoRepository.save(any(Aplicacao.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        AplicacaoResponse resposta = service.registrar(new AplicacaoRequest(1L, 2L, HOJE), EMAIL);
+
+        assertThat(resposta.dataAplicacao()).isEqualTo(HOJE);
+    }
+
+    @Test
+    void registrar_comDataPassada_eAceita() {
+        when(talhaoRepository.findById(1L)).thenReturn(Optional.of(new Talhao("A1", BigDecimal.TEN, "Soja")));
+        when(defensivoRepository.findById(2L))
+                .thenReturn(Optional.of(new Defensivo("Produto A", "Glifosato", 10)));
+        when(usuarioRepository.findByEmailIgnoreCase(EMAIL)).thenReturn(Optional.of(usuario));
+        when(aplicacaoRepository.save(any(Aplicacao.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        AplicacaoResponse resposta = service.registrar(new AplicacaoRequest(1L, 2L, HOJE.minusDays(1)), EMAIL);
+
+        assertThat(resposta.dataAplicacao()).isEqualTo(HOJE.minusDays(1));
+    }
+
+
     // ---------- auxiliares ----------
 
     private Talhao novoTalhao() {
         return new Talhao("A1", BigDecimal.TEN, "Soja");
     }
+
 
     private void talhaoExiste(Long id, Talhao talhao) {
         when(talhaoRepository.findById(id)).thenReturn(Optional.of(talhao));
