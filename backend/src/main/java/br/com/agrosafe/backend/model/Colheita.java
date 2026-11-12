@@ -1,14 +1,8 @@
+
 package br.com.agrosafe.backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -20,25 +14,32 @@ public class Colheita {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "talhao_id")
+    @JoinColumn(name = "talhao_id", nullable = false)
     private Talhao talhao;
 
-    // Usuário que registrou a colheita
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @Column(name = "data_colheita", nullable = false)
     private LocalDate dataColheita;
 
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal quantidade;
+
     protected Colheita() {
-        // exigido pelo JPA
     }
 
-    public Colheita(Talhao talhao, Usuario usuario, LocalDate dataColheita) {
+    public Colheita(
+            Talhao talhao,
+            Usuario usuario,
+            LocalDate dataColheita,
+            BigDecimal quantidade) {
+
         this.talhao = talhao;
         this.usuario = usuario;
         this.dataColheita = dataColheita;
+        this.quantidade = quantidade;
     }
 
     public Long getId() {
@@ -55,5 +56,9 @@ public class Colheita {
 
     public LocalDate getDataColheita() {
         return dataColheita;
+    }
+
+    public BigDecimal getQuantidade() {
+        return quantidade;
     }
 }
