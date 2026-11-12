@@ -63,14 +63,15 @@ class AplicacaoServiceTest {
                 Clock.fixed(HOJE.atStartOfDay(FUSO).toInstant(), FUSO));
     }
 
+    // ---------- US-09: registrar com cálculo da data de liberação ----------
+
     @Test
     void registrar_comDadosValidos_calculaALiberacaoEAssociaOUsuario() {
-        Talhao talhao = new Talhao("A1", BigDecimal.TEN, "Soja");
+        Talhao talhao = novoTalhao();
         Defensivo produtoA = new Defensivo("Produto A", "Glifosato", 10);
-        when(talhaoRepository.findById(1L)).thenReturn(Optional.of(talhao));
-        when(defensivoRepository.findById(2L)).thenReturn(Optional.of(produtoA));
-        when(usuarioRepository.findByEmailIgnoreCase(EMAIL)).thenReturn(Optional.of(usuario));
-        when(aplicacaoRepository.save(any(Aplicacao.class))).thenAnswer(inv -> inv.getArgument(0));
+        talhaoExiste(1L, talhao);
+        defensivoExiste(2L, produtoA);
+        usuarioEAplicacaoPersistem();
 
         AplicacaoResponse resposta = service.registrar(new AplicacaoRequest(1L, 2L, DATA), EMAIL);
 
@@ -100,7 +101,7 @@ class AplicacaoServiceTest {
 
     @Test
     void registrar_comDefensivoInexistente_recusaENaoSalva() {
-        when(talhaoRepository.findById(1L)).thenReturn(Optional.of(new Talhao("A1", BigDecimal.TEN, "Soja")));
+        talhaoExiste(1L, novoTalhao());
         when(defensivoRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.registrar(new AplicacaoRequest(1L, 99L, DATA), EMAIL))
@@ -112,15 +113,65 @@ class AplicacaoServiceTest {
 
     @Test
     void registrar_comUsuarioAutenticadoInexistente_recusaENaoSalva() {
-        when(talhaoRepository.findById(1L)).thenReturn(Optional.of(new Talhao("A1", BigDecimal.TEN, "Soja")));
-        when(defensivoRepository.findById(2L))
-                .thenReturn(Optional.of(new Defensivo("Produto A", "Glifosato", 10)));
+        talhaoExiste(1L, novoTalhao());
+        defensivoExiste(2L, new Defensivo("Produto A", "Glifosato", 10));
         when(usuarioRepository.findByEmailIgnoreCase(EMAIL)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.registrar(new AplicacaoRequest(1L, 2L, DATA), EMAIL))
                 .isInstanceOfSatisfying(BusinessException.class,
                         ex -> assertThat(ex.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED));
         verify(aplicacaoRepository, never()).save(any(Aplicacao.class));
+    }
+
+    // ---------- US-10: maior data de liberação no talhão (RN03) ----------
+
+    @Test
+    void registrar_primeiraAplicacao_defineADataDeLiberacaoDoTalhao() {
+        Talhao talhao = novoTalhao();
+        talhaoExiste(1L, talhao);
+        defensivoExiste(2L, new Defensivo("Produto A", "Glifosato", 10));
+        usuarioEAplicacaoPersistem();
+
+        AplicacaoResponse resposta = service.registrar(new AplicacaoRequest(1L, 2L, DATA), EMAIL);
+
+        assertThat(talhao.getDataLiberacao()).isEqualTo(LocalDate.of(2026, 10, 11));
+        assertThat(resposta.dataLiberacaoTalhao()).isEqualTo(LocalDate.of(2026, 10, 11));
+        verify(talhaoRepository).save(talhao);
+    }
+
+    @Test
+    void registrar_duasAplicacoes_prevaleceACarenciaMaisLonga() {
+        // Cenário da seção 11: A (10 dias) em 01/10 libera 11/10; B (15 dias) em 05/10 libera 20/10.
+        Talhao talhao = novoTalhao();
+        talhaoExiste(1L, talhao);
+        defensivoExiste(2L, new Defensivo("Produto A", "Glifosato", 10));
+        defensivoExiste(3L, new Defensivo("Produto B", "Atrazina", 15));
+        usuarioEAplicacaoPersistem();
+
+        service.registrar(new AplicacaoRequest(1L, 2L, LocalDate.of(2026, 10, 1)), EMAIL);
+        assertThat(talhao.getDataLiberacao()).isEqualTo(LocalDate.of(2026, 10, 11));
+
+        AplicacaoResponse resposta =
+                service.registrar(new AplicacaoRequest(1L, 3L, LocalDate.of(2026, 10, 5)), EMAIL);
+
+        assertThat(talhao.getDataLiberacao()).isEqualTo(LocalDate.of(2026, 10, 20));
+        assertThat(resposta.dataLiberacaoTalhao()).isEqualTo(LocalDate.of(2026, 10, 20));
+    }
+
+    @Test
+    void registrar_aplicacaoQueLiberaAntes_naoDiminuiADataDoTalhao() {
+        Talhao talhao = novoTalhao();
+        talhao.setDataLiberacao(LocalDate.of(2026, 10, 20));
+        talhaoExiste(1L, talhao);
+        defensivoExiste(2L, new Defensivo("Produto A", "Glifosato", 10));
+        usuarioEAplicacaoPersistem();
+
+        AplicacaoResponse resposta = service.registrar(new AplicacaoRequest(1L, 2L, DATA), EMAIL);
+
+        // A aplicação guarda a própria liberação (11/10), mas o talhão continua em 20/10.
+        assertThat(resposta.dataLiberacaoCalculada()).isEqualTo(LocalDate.of(2026, 10, 11));
+        assertThat(talhao.getDataLiberacao()).isEqualTo(LocalDate.of(2026, 10, 20));
+        assertThat(resposta.dataLiberacaoTalhao()).isEqualTo(LocalDate.of(2026, 10, 20));
     }
 
     @Test
@@ -158,5 +209,26 @@ class AplicacaoServiceTest {
         AplicacaoResponse resposta = service.registrar(new AplicacaoRequest(1L, 2L, HOJE.minusDays(1)), EMAIL);
 
         assertThat(resposta.dataAplicacao()).isEqualTo(HOJE.minusDays(1));
+    }
+
+
+    // ---------- auxiliares ----------
+
+    private Talhao novoTalhao() {
+        return new Talhao("A1", BigDecimal.TEN, "Soja");
+    }
+
+
+    private void talhaoExiste(Long id, Talhao talhao) {
+        when(talhaoRepository.findById(id)).thenReturn(Optional.of(talhao));
+    }
+
+    private void defensivoExiste(Long id, Defensivo defensivo) {
+        when(defensivoRepository.findById(id)).thenReturn(Optional.of(defensivo));
+    }
+
+    private void usuarioEAplicacaoPersistem() {
+        when(usuarioRepository.findByEmailIgnoreCase(EMAIL)).thenReturn(Optional.of(usuario));
+        when(aplicacaoRepository.save(any(Aplicacao.class))).thenAnswer(inv -> inv.getArgument(0));
     }
 }

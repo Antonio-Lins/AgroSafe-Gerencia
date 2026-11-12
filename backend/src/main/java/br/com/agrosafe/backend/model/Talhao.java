@@ -48,6 +48,18 @@ public class Talhao {
         return EstadoTalhao.EM_QUARENTENA;
     }
 
+    /**
+     * RN03: ao registrar uma aplicação, a data de liberação do talhão só muda se a nova data
+     * for maior que a atual. Uma aplicação que libera antes nunca diminui a data (prevalece a
+     * carência mais longa). O recálculo após cancelamento (RN06, US-19) usa o setter, pois
+     * precisa poder diminuir a data.
+     */
+    public void atualizarLiberacaoSeMaior(LocalDate novaDataLiberacao) {
+        if (dataLiberacao == null || novaDataLiberacao.isAfter(dataLiberacao)) {
+            this.dataLiberacao = novaDataLiberacao;
+        }
+    }
+
     public Long getId() {
         return id;
     }
@@ -83,5 +95,4 @@ public class Talhao {
     public void setDataLiberacao(LocalDate dataLiberacao) {
         this.dataLiberacao = dataLiberacao;
     }
-
 }
