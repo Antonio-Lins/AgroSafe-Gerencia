@@ -3,6 +3,8 @@ package br.com.agrosafe.backend.model;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+
+import br.com.agrosafe.backend.defensivo.Defensivo;
 import org.junit.jupiter.api.Test;
 
 /** Testes do cálculo da data de liberação (RN02, driver D2), incluindo os limites de calendário. */

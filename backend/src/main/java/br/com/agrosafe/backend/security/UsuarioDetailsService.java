@@ -1,7 +1,7 @@
 package br.com.agrosafe.backend.security;
 
-import br.com.agrosafe.backend.model.Usuario;
-import br.com.agrosafe.backend.repository.UsuarioRepository;
+import br.com.agrosafe.backend.usuario.Usuario;
+import br.com.agrosafe.backend.usuario.UsuarioRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,6 +1,7 @@
 package br.com.agrosafe.backend.service;
 
-import br.com.agrosafe.backend.dto.response.PingResponse;
+import br.com.agrosafe.backend.health.dto.PingResponse;
+import br.com.agrosafe.backend.health.PingService;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;

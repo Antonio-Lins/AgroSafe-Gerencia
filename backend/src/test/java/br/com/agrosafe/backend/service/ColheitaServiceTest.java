@@ -8,15 +8,16 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import br.com.agrosafe.backend.dto.request.ColheitaRequest;
-import br.com.agrosafe.backend.dto.response.ColheitaResponse;
-import br.com.agrosafe.backend.exception.BusinessException;
-import br.com.agrosafe.backend.model.Colheita;
-import br.com.agrosafe.backend.model.Talhao;
-import br.com.agrosafe.backend.model.Usuario;
-import br.com.agrosafe.backend.repository.ColheitaRepository;
-import br.com.agrosafe.backend.repository.TalhaoRepository;
-import br.com.agrosafe.backend.repository.UsuarioRepository;
+import br.com.agrosafe.backend.colheita.ColheitaService;
+import br.com.agrosafe.backend.colheita.dto.ColheitaRequest;
+import br.com.agrosafe.backend.colheita.dto.ColheitaResponse;
+import br.com.agrosafe.backend.shared.exception.BusinessException;
+import br.com.agrosafe.backend.colheita.Colheita;
+import br.com.agrosafe.backend.talhao.Talhao;
+import br.com.agrosafe.backend.usuario.Usuario;
+import br.com.agrosafe.backend.colheita.ColheitaRepository;
+import br.com.agrosafe.backend.talhao.TalhaoRepository;
+import br.com.agrosafe.backend.usuario.UsuarioRepository;
 
 import java.math.BigDecimal;
 import java.time.Clock;

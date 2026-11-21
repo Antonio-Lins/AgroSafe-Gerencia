@@ -1,7 +1,8 @@
 package br.com.agrosafe.backend.controller;
 
-import br.com.agrosafe.backend.dto.response.PingResponse;
-import br.com.agrosafe.backend.service.PingService;
+import br.com.agrosafe.backend.health.dto.PingResponse;
+import br.com.agrosafe.backend.health.PingController;
+import br.com.agrosafe.backend.health.PingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

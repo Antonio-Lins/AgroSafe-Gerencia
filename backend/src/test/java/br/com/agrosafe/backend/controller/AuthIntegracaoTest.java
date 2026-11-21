@@ -8,10 +8,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import br.com.agrosafe.backend.model.Perfil;
-import br.com.agrosafe.backend.model.Usuario;
-import br.com.agrosafe.backend.repository.TalhaoRepository;
-import br.com.agrosafe.backend.repository.UsuarioRepository;
+import br.com.agrosafe.backend.usuario.Perfil;
+import br.com.agrosafe.backend.usuario.Usuario;
+import br.com.agrosafe.backend.talhao.TalhaoRepository;
+import br.com.agrosafe.backend.usuario.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

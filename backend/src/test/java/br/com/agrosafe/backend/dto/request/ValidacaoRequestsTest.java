@@ -2,6 +2,8 @@ package br.com.agrosafe.backend.dto.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import br.com.agrosafe.backend.defensivo.dto.DefensivoRequest;
+import br.com.agrosafe.backend.talhao.dto.TalhaoRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

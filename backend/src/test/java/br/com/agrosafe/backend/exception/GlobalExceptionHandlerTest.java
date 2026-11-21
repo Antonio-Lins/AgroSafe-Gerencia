@@ -1,5 +1,8 @@
 package br.com.agrosafe.backend.exception;
 
+import br.com.agrosafe.backend.shared.exception.BusinessException;
+import br.com.agrosafe.backend.shared.exception.GlobalExceptionHandler;
+import br.com.agrosafe.backend.shared.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
