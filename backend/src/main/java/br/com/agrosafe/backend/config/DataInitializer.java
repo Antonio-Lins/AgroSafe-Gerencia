@@ -1,13 +1,12 @@
 package br.com.agrosafe.backend.config;
 
-import br.com.agrosafe.backend.model.Perfil;
-import br.com.agrosafe.backend.model.Usuario;
-import br.com.agrosafe.backend.repository.UsuarioRepository;
+import br.com.agrosafe.backend.usuario.Perfil;
+import br.com.agrosafe.backend.usuario.Usuario;
+import br.com.agrosafe.backend.usuario.UsuarioRepository;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 // Classe responsável por criar usuários de teste GESTOR e OPERADOR

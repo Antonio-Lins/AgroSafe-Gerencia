@@ -8,9 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import br.com.agrosafe.backend.model.Talhao;
-import br.com.agrosafe.backend.repository.ColheitaRepository;
-import br.com.agrosafe.backend.repository.TalhaoRepository;
+import br.com.agrosafe.backend.talhao.Talhao;
+import br.com.agrosafe.backend.colheita.ColheitaRepository;
+import br.com.agrosafe.backend.talhao.TalhaoRepository;
 
 import java.math.BigDecimal;
 import java.time.Clock;
