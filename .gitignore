@@ -1,0 +1,15 @@
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.*.local
+
+# Arquivos do IntelliJ
+.idea/
+*.iml
+
+# Arquivos temporarios
+*.log

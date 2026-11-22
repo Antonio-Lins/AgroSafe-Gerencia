@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import br.com.agrosafe.backend.talhao.EstadoTalhao;
+import br.com.agrosafe.backend.talhao.Talhao;
 import org.junit.jupiter.api.Test;
 
 /** Testes da regra RN03 (maior data de liberação) e do estado calculado (RN01). */
