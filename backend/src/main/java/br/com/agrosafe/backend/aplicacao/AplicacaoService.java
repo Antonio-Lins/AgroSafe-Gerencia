@@ -2,7 +2,11 @@ package br.com.agrosafe.backend.aplicacao;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+import br.com.agrosafe.backend.aplicacao.dto.CancelamentoResponse;
+import br.com.agrosafe.backend.shared.exception.ResourceNotFoundException;
+import br.com.agrosafe.backend.usuario.Perfil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +77,82 @@ public class AplicacaoService {
         talhaoRepository.save(talhao);
 
         return AplicacaoResponse.de(salva);
+    }
+
+    // SCRUM-61 (US-20): cancelar aplicação com motivo.
+    // SCRUM-62 (US-21): recalcular liberação após cancelamento.
+    @Transactional
+    public CancelamentoResponse cancelar(
+            Long aplicacaoId,
+            String motivo,
+            String emailUsuario
+    ) {
+
+        if (motivo == null || motivo.isBlank()) {
+            throw new BusinessException(
+                    "O motivo do cancelamento é obrigatório.",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        String motivoTratado = motivo.strip();
+
+        if (motivoTratado.length() > 500) {
+            throw new BusinessException(
+                    "O motivo deve ter no máximo 500 caracteres.",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        Usuario responsavel = usuarioRepository
+                .findByEmailIgnoreCase(emailUsuario)
+                .orElseThrow(() -> new BusinessException(
+                        "Usuário autenticado não encontrado.",
+                        HttpStatus.UNAUTHORIZED
+                ));
+
+        if (responsavel.getPerfil() != Perfil.GESTOR) {
+            throw new BusinessException(
+                    "Somente o Gestor pode cancelar aplicações.",
+                    HttpStatus.FORBIDDEN
+            );
+        }
+
+        Aplicacao aplicacao = aplicacaoRepository.findById(aplicacaoId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Aplicação não encontrada."
+                ));
+
+        if (aplicacao.isCancelada()) {
+            throw new BusinessException(
+                    "Esta aplicação já está cancelada.",
+                    HttpStatus.CONFLICT
+            );
+        }
+
+        // US-20: preserva o registro original e grava a auditoria.
+        aplicacao.cancelar(
+                motivoTratado,
+                responsavel,
+                LocalDateTime.now(clock)
+        );
+
+        // Garante que o cancelamento seja enviado ao banco antes
+        // da consulta que considera apenas aplicações ativas.
+        aplicacaoRepository.saveAndFlush(aplicacao);
+
+        Talhao talhao = aplicacao.getTalhao();
+
+        // US-21: a data pode diminuir ou se tornar nula.
+        LocalDate novaLiberacao =
+                aplicacaoRepository.buscarMaiorDataLiberacaoAtiva(
+                        talhao.getId()
+                );
+
+        talhao.setDataLiberacao(novaLiberacao);
+        talhaoRepository.save(talhao);
+
+        return CancelamentoResponse.de(aplicacao);
     }
 
     private BusinessException referenciaInexistente(String mensagem) {

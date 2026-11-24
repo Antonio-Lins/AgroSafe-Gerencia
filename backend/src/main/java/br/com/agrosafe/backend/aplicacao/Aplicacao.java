@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "aplicacoes")
 public class Aplicacao {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +31,6 @@ public class Aplicacao {
     @JoinColumn(name = "defensivo_id")
     private Defensivo defensivo;
 
-    // Usuário que registrou a aplicação (RF02)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
@@ -55,16 +55,27 @@ public class Aplicacao {
     private LocalDateTime canceladaEm;
 
     protected Aplicacao() {
-        // exigido pelo JPA
+        // Exigido pelo JPA
     }
 
-    public Aplicacao(Talhao talhao, Defensivo defensivo, Usuario usuario,
-                     LocalDate dataAplicacao, LocalDate dataLiberacaoCalculada) {
+    public Aplicacao(Talhao talhao,
+                     Defensivo defensivo,
+                     Usuario usuario,
+                     LocalDate dataAplicacao,
+                     LocalDate dataLiberacaoCalculada) {
         this.talhao = talhao;
         this.defensivo = defensivo;
         this.usuario = usuario;
         this.dataAplicacao = dataAplicacao;
         this.dataLiberacaoCalculada = dataLiberacaoCalculada;
+    }
+
+    // US-20: registra o cancelamento sem excluir a aplicação.
+    public void cancelar(String motivo, Usuario responsavel, LocalDateTime dataHora) {
+        this.cancelada = true;
+        this.motivoCancelamento = motivo;
+        this.canceladaPor = responsavel;
+        this.canceladaEm = dataHora;
     }
 
     public Long getId() {
