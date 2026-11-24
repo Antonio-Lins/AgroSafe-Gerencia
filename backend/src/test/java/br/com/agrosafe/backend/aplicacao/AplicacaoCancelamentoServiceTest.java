@@ -101,6 +101,7 @@ class AplicacaoCancelamentoServiceTest {
     @Test
     void cancelarAplicacaoMaisLonga_recalculaLiberacao() {
         configurarGestor();
+        when(gestor.getId()).thenReturn(1L);
 
         talhao.setDataLiberacao(DATA_B);
         Aplicacao aplicacaoB = criarAplicacao(2L, DATA_B);
@@ -129,6 +130,7 @@ class AplicacaoCancelamentoServiceTest {
     @Test
     void cancelarUnicaAplicacao_removeDataLiberacao() {
         configurarGestor();
+        when(gestor.getId()).thenReturn(1L);
 
         talhao.setDataLiberacao(DATA_B);
         Aplicacao aplicacao = criarAplicacao(2L, DATA_B);
@@ -149,6 +151,7 @@ class AplicacaoCancelamentoServiceTest {
     @Test
     void cancelarAplicacaoQueNaoEraMaior_mantemLiberacao() {
         configurarGestor();
+        when(gestor.getId()).thenReturn(1L);
 
         talhao.setDataLiberacao(DATA_B);
         Aplicacao aplicacaoA = criarAplicacao(1L, DATA_A);
