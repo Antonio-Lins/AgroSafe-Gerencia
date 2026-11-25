@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import Logo from '../../../shared/components/Logo.jsx';
-import { login } from '../services/authService.js';
+import { useAuth } from '../AuthContext.jsx';
 
 // Mosaico decorativo da lateral (mesmo desenho do protótipo). "q" é o talhão em quarentena.
 const MOSAICO = ['', 'a', '', 'b', 'c', 'a', 'b', '', 'a', 'q', '', 'c', 'a', 'c', '', 'a', 'b', '', '', 'b', 'a', '', 'c', 'a'];
@@ -21,8 +22,11 @@ export default function Login() {
   const [senha, setSenha] = useState('');
   const [erros, setErros] = useState({ email: '', senha: '' });
   const [erroGeral, setErroGeral] = useState('');
-  const [usuario, setUsuario] = useState(null);
   const [enviando, setEnviando] = useState(false);
+  const { usuario, entrar } = useAuth();
+  const local = useLocation();
+  // Volta para a página que a pessoa tentou abrir antes de logar (ou para o início)
+  const destino = local.state?.de?.pathname ?? '/';
 
   function usarConta(conta) {
     setEmail(conta.email);
@@ -38,19 +42,21 @@ export default function Login() {
     };
     setErros(novosErros);
     setErroGeral('');
-    setUsuario(null);
     if (novosErros.email || novosErros.senha) return;
 
     setEnviando(true);
-    const resultado = await login(emailLimpo, senha);
+    const resultado = await entrar(emailLimpo, senha);
     setEnviando(false);
 
-    if (resultado.ok) {
-      // Ainda não há outras telas: só confirmamos que o login funcionou.
-      setUsuario(resultado.usuario);
-    } else {
+    // Se deu certo, o usuário passa a existir no contexto e o <Navigate> abaixo redireciona.
+    if (!resultado.ok) {
       setErroGeral(MENSAGENS_ERRO[resultado.motivo]);
     }
+  }
+
+  // Já está logado (ex.: abriu /login de novo): vai direto para dentro do sistema
+  if (usuario) {
+    return <Navigate to={destino} replace />;
   }
 
   return (
@@ -98,12 +104,6 @@ export default function Login() {
           {erroGeral && (
             <div className="form-err" role="alert">
               {erroGeral}
-            </div>
-          )}
-          {usuario && (
-            <div className="form-ok" role="status">
-              Login realizado como {usuario.nome} ({usuario.perfil === 'GESTOR' ? 'Gestor' : 'Operador'}).
-              As próximas telas ainda estão em desenvolvimento.
             </div>
           )}
 
