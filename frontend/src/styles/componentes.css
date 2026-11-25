@@ -1,0 +1,230 @@
+/* componentes compartilhados pelas telas de cadastro (talhões, defensivos...) */
+
+/* botões */
+.btn.ghost {
+  background: transparent;
+  color: var(--green);
+  border: 1px solid var(--line);
+}
+.btn.ghost:hover {
+  background: var(--ok-bg);
+}
+.btn.ghost:disabled {
+  background: transparent;
+  color: var(--muted);
+}
+.btn.danger {
+  background: var(--red);
+}
+.btn.danger:hover {
+  background: #8a2f20;
+}
+.btn.sm {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+}
+.link {
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* cabeçalho da página */
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.4rem;
+}
+.app-conteudo .head h1 {
+  margin-bottom: 0;
+}
+.head p {
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+.ro {
+  background: var(--amber-bg);
+  color: var(--amber-ink);
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 1.2rem;
+}
+
+/* tabela */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: auto;
+}
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tabela th {
+  text-align: left;
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.tabela td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.tabela tr:last-child td {
+  border-bottom: 0;
+}
+.tabela .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.tabela .acoes {
+  text-align: right;
+  white-space: nowrap;
+}
+.tabela .acoes .btn + .btn {
+  margin-left: 0.35rem;
+}
+.badge {
+  display: inline-block;
+  padding: 0.12rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--ok-bg);
+  color: var(--green-d);
+  white-space: nowrap;
+}
+.badge.q {
+  background: var(--amber-bg);
+  color: var(--amber-ink);
+}
+.estado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+@media (max-width: 600px) {
+  .estado {
+    align-items: flex-end;
+  }
+}
+.ate {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+.vazio {
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* celular: cada linha da tabela vira um cartão (nada fica escondido fora da tela) */
+@media (max-width: 600px) {
+  .tabela thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .tabela,
+  .tabela tbody,
+  .tabela tr,
+  .tabela td {
+    display: block;
+  }
+  .tabela tr {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .tabela tr:last-child {
+    border-bottom: 0;
+  }
+  .tabela td {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.3rem 0;
+    border-bottom: 0;
+    text-align: right;
+  }
+  .tabela td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: left;
+  }
+  .tabela td.acoes {
+    justify-content: flex-end;
+    padding-top: 0.6rem;
+  }
+  .tabela td.acoes::before {
+    display: none;
+  }
+}
+
+/* janela modal */
+.modal {
+  margin: auto; /* o reset global (* { margin: 0 }) tira o centro do <dialog> */
+  border: 0;
+  border-radius: 14px;
+  padding: 1.6rem;
+  width: min(440px, 92vw);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+.modal::backdrop {
+  background: rgba(21, 35, 26, 0.5);
+}
+.modal h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.2rem;
+}
+.modal-texto {
+  margin: 0.6rem 0 0;
+}
+.modal-acoes {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  margin-top: 1.4rem;
+}
+
+/* aviso rápido */
+.avisos {
+  position: fixed;
+  bottom: 1.2rem;
+  right: 1.2rem;
+  left: 1.2rem;
+  display: grid;
+  justify-items: end;
+  z-index: 99;
+  pointer-events: none;
+}
+.aviso {
+  background: var(--green-d);
+  color: #fff;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  max-width: 340px;
+}
+.aviso-erro {
+  background: var(--red);
+}

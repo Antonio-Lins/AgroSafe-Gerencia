@@ -7,7 +7,7 @@ import '../../styles/layout.css';
 // adicione a rota no App.jsx e uma linha aqui.
 const ITENS_MENU = [
   { to: '/', rotulo: 'Início', fim: true },
-  // { to: '/talhoes', rotulo: 'Talhões' },
+  { to: '/talhoes', rotulo: 'Talhões' },
   // { to: '/defensivos', rotulo: 'Defensivos' },
 ];
 

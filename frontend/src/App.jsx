@@ -4,6 +4,7 @@ import RotaProtegida from './features/auth/components/RotaProtegida.jsx';
 import Login from './features/auth/pages/Login.jsx';
 import Layout from './shared/components/Layout.jsx';
 import Inicio from './features/home/pages/Inicio.jsx';
+import TalhoesLista from './features/talhoes/pages/TalhoesLista.jsx';
 
 export default function App() {
   return (
@@ -17,10 +18,8 @@ export default function App() {
           <Route element={<RotaProtegida />}>
             <Route element={<Layout />}>
               <Route index element={<Inicio />} />
-              {/* Próximas telas entram aqui, por exemplo:
-                  <Route path="talhoes" element={<TalhoesLista />} />
-
-                  Tela só para Gestor (ex.: cadastro):
+              <Route path="talhoes" element={<TalhoesLista />} />
+              {/* Próximas telas entram aqui. Tela só para Gestor (ex.: cadastro):
                   <Route element={<RotaProtegida perfis={['GESTOR']} />}>
                     <Route path="talhoes/novo" element={<TalhaoForm />} />
                   </Route>
