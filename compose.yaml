@@ -1,0 +1,26 @@
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: agrosafe-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: agrosafe_db
+      POSTGRES_USER: agrosafe_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Configure DB_PASSWORD antes de iniciar}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - agrosafe_pgdata:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agrosafe_user -d agrosafe_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  agrosafe_pgdata:
