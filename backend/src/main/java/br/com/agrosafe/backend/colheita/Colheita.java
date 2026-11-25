@@ -6,6 +6,7 @@ import br.com.agrosafe.backend.usuario.Usuario;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "colheitas")
@@ -29,6 +30,19 @@ public class Colheita {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal quantidade;
 
+    @Column(nullable = false)
+    private boolean cancelada = false;
+
+    @Column(name = "motivo_cancelamento", length = 500)
+    private String motivoCancelamento;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cancelada_por_id")
+    private Usuario canceladaPor;
+
+    @Column(name = "cancelada_em")
+    private LocalDateTime canceladaEm;
+
     protected Colheita() {
     }
 
@@ -42,6 +56,14 @@ public class Colheita {
         this.usuario = usuario;
         this.dataColheita = dataColheita;
         this.quantidade = quantidade;
+    }
+
+    // US-22: registra o cancelamento sem excluir a colheita (o registro original é preservado).
+    public void cancelar(String motivo, Usuario responsavel, LocalDateTime dataHora) {
+        this.cancelada = true;
+        this.motivoCancelamento = motivo;
+        this.canceladaPor = responsavel;
+        this.canceladaEm = dataHora;
     }
 
     public Long getId() {
@@ -62,5 +84,21 @@ public class Colheita {
 
     public BigDecimal getQuantidade() {
         return quantidade;
+    }
+
+    public boolean isCancelada() {
+        return cancelada;
+    }
+
+    public String getMotivoCancelamento() {
+        return motivoCancelamento;
+    }
+
+    public Usuario getCanceladaPor() {
+        return canceladaPor;
+    }
+
+    public LocalDateTime getCanceladaEm() {
+        return canceladaEm;
     }
 }
