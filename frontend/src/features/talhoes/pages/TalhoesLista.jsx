@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import Aviso from '../../../shared/components/Aviso.jsx';
 import TalhaoFormModal from '../components/TalhaoFormModal.jsx';
@@ -9,11 +10,15 @@ import '../../../styles/componentes.css';
 const formatarHectares = (n) =>
   Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
 
+// Tela de registrar colheita (UI-03, SCRUM-70). Se o caminho dela for outro, ajuste só aqui.
+const rotaRegistrarColheita = (talhaoId) => `/colheitas/nova?talhaoId=${talhaoId}`;
+
 // A API manda "2026-11-26"; invertemos o texto para evitar problema de fuso horário.
 const formatarData = (iso) => iso.split('-').reverse().join('/');
 
 export default function TalhoesLista() {
   const { ehGestor } = useAuth();
+  const navigate = useNavigate();
 
   const [talhoes, setTalhoes] = useState(null); // null = ainda carregando
   const [erroCarga, setErroCarga] = useState('');
@@ -120,6 +125,7 @@ export default function TalhoesLista() {
                   <th>Cultura</th>
                   <th className="num">Hectares</th>
                   <th>Estado</th>
+                  <th>Colheita</th>
                   {ehGestor && <th></th>}
                 </tr>
               </thead>
@@ -136,12 +142,26 @@ export default function TalhoesLista() {
                         {formatarHectares(t.hectares)}
                       </td>
                       <td data-label="Estado">
-                        <div className="estado">
-                          <span className={quarentena ? 'badge q' : 'badge'}>
-                            {quarentena ? 'Em quarentena' : 'Livre'}
-                          </span>
+                        <span className={quarentena ? 'badge q' : 'badge'}>
+                          {quarentena ? 'Em quarentena' : 'Livre'}
+                        </span>
+                      </td>
+                      <td data-label="Colheita">
+                        <div className="colher">
+                          <button
+                            type="button"
+                            className="btn sm"
+                            disabled={quarentena}
+                            aria-describedby={quarentena ? `libera-${t.id}` : undefined}
+                            aria-label={`Colher talhão ${t.codigo}`}
+                            onClick={() => navigate(rotaRegistrarColheita(t.id))}
+                          >
+                            Colher
+                          </button>
                           {quarentena && t.dataLiberacao && (
-                            <span className="ate">libera em {formatarData(t.dataLiberacao)}</span>
+                            <span id={`libera-${t.id}`} className="ate">
+                              libera em {formatarData(t.dataLiberacao)}
+                            </span>
                           )}
                         </div>
                       </td>
