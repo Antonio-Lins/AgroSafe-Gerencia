@@ -20,3 +20,22 @@ export async function login(email, senha) {
   }
   return { ok: false, motivo: 'erro' };
 }
+
+/** Pergunta ao backend quem está logado. Devolve o usuário ou null (sem sessão / sem rede). */
+export async function buscarUsuarioLogado() {
+  try {
+    const resposta = await fetch('/api/auth/me', { credentials: 'same-origin' });
+    return resposta.ok ? await resposta.json() : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Encerra a sessão no backend. Mesmo que falhe a rede, o front limpa o usuário. */
+export async function logout() {
+  try {
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+  } catch {
+    // sem rede: segue em frente
+  }
+}

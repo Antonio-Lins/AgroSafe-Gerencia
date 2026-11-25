@@ -1,0 +1,93 @@
+/* layout das telas internas (depois do login) */
+.carregando {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+}
+
+.app {
+  min-height: 100vh;
+}
+.app-topo {
+  background: var(--green-d);
+  color: #eaf1df;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.5rem;
+  padding: 0.75rem 1.25rem;
+}
+.app-menu {
+  display: flex;
+  gap: 0.25rem;
+  flex: 1;
+}
+.app-menu a {
+  color: #eaf1df;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+.app-menu a:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.08);
+}
+.app-menu a.active {
+  opacity: 1;
+  background: var(--green);
+}
+
+.app-usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-left: auto;
+}
+.app-usuario-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  text-align: right;
+}
+.app-usuario-nome {
+  font-weight: 600;
+}
+.app-usuario-perfil {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+.btn-sair {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #eaf1df;
+}
+.btn-sair:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.app-conteudo {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+.app-conteudo h1 {
+  font-size: 1.9rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+/* celular (360 px): menu desce para uma segunda linha */
+@media (max-width: 600px) {
+  .app-menu {
+    order: 3;
+    flex-basis: 100%;
+    overflow-x: auto;
+  }
+}
