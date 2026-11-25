@@ -5,6 +5,8 @@ import Login from './features/auth/pages/Login.jsx';
 import Layout from './shared/components/Layout.jsx';
 import Inicio from './features/home/pages/Inicio.jsx';
 import TalhoesLista from './features/talhoes/pages/TalhoesLista.jsx';
+import DefensivosLista from './features/defensivos/pages/DefensivosLista.jsx';
+import AplicacaoNova from './features/aplicacoes/pages/AplicacaoNova.jsx';
 
 export default function App() {
   return (
@@ -19,11 +21,19 @@ export default function App() {
             <Route element={<Layout />}>
               <Route index element={<Inicio />} />
               <Route path="talhoes" element={<TalhoesLista />} />
-              {/* Próximas telas entram aqui. Tela só para Gestor (ex.: cadastro):
-                  <Route element={<RotaProtegida perfis={['GESTOR']} />}>
-                    <Route path="talhoes/novo" element={<TalhaoForm />} />
-                  </Route>
-              */}
+
+              {/* SCRUM-72: CRUD de defensivos */}
+              <Route
+                  path="defensivos"
+                  element={<DefensivosLista />}
+              />
+
+              {/* SCRUM-69: Registro de aplicação */}
+              <Route
+                  path="aplicacoes/nova"
+                  element={<AplicacaoNova />}
+              />
+
             </Route>
           </Route>
 
