@@ -109,13 +109,15 @@
   background: var(--amber-bg);
   color: var(--amber-ink);
 }
-.estado {
+.estado,
+.colher {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 @media (max-width: 600px) {
-  .estado {
+  .estado,
+  .colher {
     align-items: flex-end;
   }
 }
