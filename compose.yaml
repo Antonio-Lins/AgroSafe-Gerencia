@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:?Configure DB_PASSWORD antes de iniciar}
 
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
 
     volumes:
       - agrosafe_pgdata:/var/lib/postgresql/data

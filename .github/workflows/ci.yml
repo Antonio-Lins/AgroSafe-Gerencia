@@ -1,33 +1,136 @@
+
 name: CI
 
-# Roda em todo pull request e em pushes na branch principal.
-# O resultado aparece como "check" no próprio pull request.
+# Executa nos Pull Requests e apos pushes na main.
 on:
   pull_request:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   backend:
-    name: Backend (build + testes)
+    name: Backend (testes e cobertura)
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: backend
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+    steps:
+      - name: Checkout do repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '25'
           cache: maven
+          cache-dependency-path: backend/pom.xml
 
-      # Arquivos commitados no Windows perdem a permissão de execução no Git.
-      # Sem esta linha, o Linux do GitHub recusa rodar o ./mvnw.
-      - name: Dar permissão de execução ao Maven Wrapper
+      - name: Dar permissao ao Maven Wrapper
         run: chmod +x mvnw
 
-      # "verify" compila e executa os testes. Teste falhando reprova o job (e o PR).
-      - name: Compilar e testar
-        run: ./mvnw -B verify
+      - name: Compilar e executar testes
+        run: ./mvnw -B clean verify
+
+      - name: Publicar relatorio JaCoCo
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-backend
+          path: backend/target/site/jacoco/
+          if-no-files-found: warn
+
+      - name: Publicar resultados JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testes-backend
+          path: backend/target/surefire-reports/
+          if-no-files-found: warn
+
+  frontend:
+    name: Frontend (lint e build)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout do repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Executar ESLint
+        run: npm run lint
+
+      - name: Compilar frontend React
+        run: npm run build
+
+  postgresql:
+    name: PostgreSQL (Flyway e JPA)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+
+        env:
+          POSTGRES_DB: agrosafe_migration_test
+          POSTGRES_USER: agrosafe_user
+          POSTGRES_PASSWORD: agrosafe_ci_test
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd "pg_isready -U agrosafe_user -d agrosafe_migration_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout do repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+
+      - name: Dar permissao ao Maven Wrapper
+        run: chmod +x mvnw
+
+      - name: Testar migracoes Flyway e esquema JPA
+        env:
+          DB_PASSWORD: agrosafe_ci_test
+        run: ./mvnw -B -Dtest=FlywayMigrationIT test
+
+      - name: Publicar resultados PostgreSQL
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testes-postgresql
+          path: backend/target/surefire-reports/
+          if-no-files-found: warn
