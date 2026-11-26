@@ -95,3 +95,65 @@
         padding: 1rem;
     }
 }
+
+/* US18 - Contadores do painel */
+
+.painel-resumo {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.painel-contador {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    overflow-wrap: anywhere;
+}
+
+.painel-contador h2 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.painel-contador-valor {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.painel-contador span {
+    font-size: 0.9rem;
+}
+
+.painel-contador-percentual {
+    font-weight: 600;
+}
+
+.painel-contador--livre {
+    background: var(--ok-bg);
+    color: var(--green-d);
+    border-left: 5px solid var(--green);
+}
+
+.painel-contador--quarentena {
+    background: var(--red-bg);
+    color: var(--red);
+    border-left: 5px solid var(--red);
+}
+
+@media (max-width: 600px) {
+    .painel-resumo {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .painel-contador {
+        padding: 1rem;
+    }
+}

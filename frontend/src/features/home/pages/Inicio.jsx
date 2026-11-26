@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { listarTalhoes } from '../../talhoes/services/talhaoService.js';
 import TalhaoCard from '../components/TalhaoCard.jsx';
+import ResumoPainel from '../components/ResumoPainel.jsx';
 import '../../../styles/painel.css';
 
 export default function Inicio() {
-    const { usuario } = useAuth();
+    const { usuario, ehGestor } = useAuth();
 
     const [talhoes, setTalhoes] = useState([]);
     const [carregando, setCarregando] = useState(true);
@@ -60,6 +61,10 @@ export default function Inicio() {
                     dos talhões da fazenda.
                 </p>
             </header>
+
+            {ehGestor && !carregando && !erro && (
+                <ResumoPainel talhoes={talhoes} />
+            )}
 
             {carregando && (
                 <p className="sub" role="status">
