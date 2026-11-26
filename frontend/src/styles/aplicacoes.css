@@ -1,0 +1,75 @@
+
+/* Tela de registro de aplicação */
+
+.pagina-aplicacao {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.aplicacao-card {
+    padding: 1.5rem;
+    overflow: visible;
+}
+
+.aplicacao-card form {
+    max-width: 100%;
+}
+
+.aplicacao-card select {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+}
+
+.aplicacao-card select:focus {
+    border-color: var(--green);
+}
+
+.aplicacao-card select.bad {
+    border-color: var(--red);
+}
+
+.campo-ajuda {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.25rem;
+}
+
+.aplicacao-acoes {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.aplicacao-resultado {
+    margin-top: 1.5rem;
+    border: 1px solid var(--line);
+    border-left: 5px solid var(--green);
+    border-radius: 10px;
+    padding: 1.3rem;
+    background: var(--ok-bg);
+}
+
+.aplicacao-resultado h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+}
+
+.aplicacao-resultado p {
+    margin-top: 0.4rem;
+}
+
+@media (max-width: 600px) {
+    .aplicacao-card {
+        padding: 1rem;
+    }
+
+    .aplicacao-acoes,
+    .aplicacao-acoes .btn {
+        width: 100%;
+    }
+}
