@@ -8,7 +8,8 @@ import '../../styles/layout.css';
 const ITENS_MENU = [
   { to: '/', rotulo: 'Início', fim: true },
   { to: '/talhoes', rotulo: 'Talhões' },
-  // { to: '/defensivos', rotulo: 'Defensivos' },
+  { to: '/defensivos', rotulo: 'Defensivos' },
+  { to: '/aplicacoes/nova', rotulo: 'Registrar aplicação' },
 ];
 
 export default function Layout() {
