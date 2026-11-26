@@ -1,5 +1,8 @@
+import { Link } from 'react-router-dom';
+
 export default function TalhaoCard({ talhao }) {
     const emQuarentena = talhao.estado === 'EM_QUARENTENA';
+    const livre = talhao.estado === 'LIVRE';
 
     const formatarData = (data) =>
         data.split('-').reverse().join('/');
@@ -8,6 +11,12 @@ export default function TalhaoCard({ talhao }) {
         Number(hectares).toLocaleString('pt-BR', {
             maximumFractionDigits: 2,
         });
+
+    const rotaAplicacao =
+        `/aplicacoes/nova?talhaoId=${talhao.id}`;
+
+    const rotaColheita =
+        `/colheitas/nova?talhaoId=${talhao.id}`;
 
     return (
         <article
@@ -42,6 +51,39 @@ export default function TalhaoCard({ talhao }) {
                     </p>
                 )}
             </div>
+
+            <div className="painel-talhao-acoes">
+                <Link
+                    to={rotaAplicacao}
+                    className="painel-atalho painel-atalho--aplicacao"
+                >
+                    Registrar aplicação
+                </Link>
+
+                {livre ? (
+                    <Link
+                        to={rotaColheita}
+                        className="painel-atalho painel-atalho--colheita"
+                    >
+                        Registrar colheita
+                    </Link>
+                ) : (
+                    <button
+                        type="button"
+                        className="painel-atalho painel-atalho--colheita"
+                        disabled
+                    >
+                        Registrar colheita
+                    </button>
+                )}
+            </div>
+
+            {emQuarentena && talhao.dataLiberacao && (
+                <p className="painel-talhao-bloqueio">
+                    Colheita bloqueada até{' '}
+                    {formatarData(talhao.dataLiberacao)}.
+                </p>
+            )}
         </article>
     );
 }
