@@ -52,6 +52,10 @@ const talhoesMock = [
     },
 ];
 
+// ==========================================
+// US17 - Estados dos talhões
+// ==========================================
+
 describe('Painel de talhões - US17', () => {
     beforeEach(() => {
         vi.resetAllMocks();
@@ -85,7 +89,9 @@ describe('Painel de talhões - US17', () => {
 
         render(<Inicio />);
 
-        const cards = await screen.findAllByRole('article');
+        const cards = await screen.findAllByRole('article', {
+            name: '',
+        });
 
         expect(cards).toHaveLength(2);
 
@@ -128,7 +134,9 @@ describe('Painel de talhões - US17', () => {
         render(<Inicio />);
 
         expect(
-            await screen.findAllByRole('article')
+            await screen.findAllByRole('article', {
+                name: '',
+            })
         ).toHaveLength(2);
     });
 
@@ -171,7 +179,9 @@ describe('Painel de talhões - US17', () => {
         await user.click(botao);
 
         expect(
-            await screen.findAllByRole('article')
+            await screen.findAllByRole('article', {
+                name: '',
+            })
         ).toHaveLength(2);
 
         expect(listarTalhoes).toHaveBeenCalledTimes(2);
@@ -185,8 +195,12 @@ describe('Painel de talhões - US17', () => {
 
         const { unmount } = render(<Inicio />);
 
+        const [cardAntes] = await screen.findAllByRole('article', {
+            name: '',
+        });
+
         expect(
-            await screen.findByText('Em quarentena')
+            within(cardAntes).getByText('Em quarentena')
         ).toBeInTheDocument();
 
         unmount();
@@ -203,12 +217,165 @@ describe('Painel de talhões - US17', () => {
 
         render(<Inicio />);
 
+        const [cardDepois] = await screen.findAllByRole('article', {
+            name: '',
+        });
+
         expect(
-            await screen.findByText('Livre')
+            within(cardDepois).getByText('Livre')
         ).toBeInTheDocument();
 
         expect(
-            screen.queryByText('Em quarentena')
+            within(cardDepois).queryByText('Em quarentena')
         ).not.toBeInTheDocument();
+
+        expect(listarTalhoes).toHaveBeenCalledTimes(2);
+    });
+});
+
+// ==========================================
+// US18 - Contadores do painel
+// ==========================================
+
+describe('Painel de talhões - US18', () => {
+    beforeEach(() => {
+        vi.resetAllMocks();
+
+        useAuth.mockReturnValue({
+            usuario: {
+                nome: 'Gestor',
+                perfil: 'GESTOR',
+            },
+            ehGestor: true,
+        });
+    });
+
+    it('exibe os contadores para o gestor', async () => {
+        listarTalhoes.mockResolvedValue({
+            ok: true,
+            dados: talhoesMock,
+        });
+
+        render(<Inicio />);
+
+        const resumo = await screen.findByRole('region', {
+            name: 'Resumo dos talhões',
+        });
+
+        expect(
+            within(resumo).getByText('Total de talhões')
+        ).toBeInTheDocument();
+
+        expect(
+            within(resumo).getAllByText('50%')
+        ).toHaveLength(2);
+    });
+
+    it('não exibe os contadores para o operador', async () => {
+        useAuth.mockReturnValue({
+            usuario: {
+                nome: 'Operador',
+                perfil: 'OPERADOR',
+            },
+            ehGestor: false,
+        });
+
+        listarTalhoes.mockResolvedValue({
+            ok: true,
+            dados: talhoesMock,
+        });
+
+        render(<Inicio />);
+
+        await screen.findByRole('heading', {
+            name: 'Talhão A1',
+        });
+
+        expect(
+            screen.queryByRole('region', {
+                name: 'Resumo dos talhões',
+            })
+        ).not.toBeInTheDocument();
+    });
+
+    it('exibe percentuais zerados quando não existem talhões', async () => {
+        listarTalhoes.mockResolvedValue({
+            ok: true,
+            dados: [],
+        });
+
+        render(<Inicio />);
+
+        const resumo = await screen.findByRole('region', {
+            name: 'Resumo dos talhões',
+        });
+
+        expect(
+            within(resumo).getAllByText('0%')
+        ).toHaveLength(2);
+
+        expect(
+            screen.getByText('Nenhum talhão cadastrado.')
+        ).toBeInTheDocument();
+    });
+
+    it('não exibe contadores quando a consulta falha', async () => {
+        listarTalhoes.mockResolvedValue({
+            ok: false,
+            mensagem: 'Falha de conexão.',
+        });
+
+        render(<Inicio />);
+
+        await screen.findByRole('alert');
+
+        expect(
+            screen.queryByRole('region', {
+                name: 'Resumo dos talhões',
+            })
+        ).not.toBeInTheDocument();
+    });
+
+    it('atualiza os contadores ao retornar ao painel', async () => {
+        listarTalhoes.mockResolvedValueOnce({
+            ok: true,
+            dados: [
+                talhoesMock[0],
+                {
+                    ...talhoesMock[1],
+                    estado: 'LIVRE',
+                    dataLiberacao: null,
+                },
+            ],
+        });
+
+        const { unmount } = render(<Inicio />);
+
+        expect(
+            await screen.findByText('100%')
+        ).toBeInTheDocument();
+
+        unmount();
+
+        listarTalhoes.mockResolvedValueOnce({
+            ok: true,
+            dados: talhoesMock,
+        });
+
+        render(<Inicio />);
+
+        const resumo = await screen.findByRole('region', {
+            name: 'Resumo dos talhões',
+        });
+
+        expect(
+            within(resumo).getAllByText('50%')
+        ).toHaveLength(2);
+
+        expect(
+            screen.queryByText('100%')
+        ).not.toBeInTheDocument();
+
+        expect(listarTalhoes).toHaveBeenCalledTimes(2);
     });
 });
