@@ -6,6 +6,8 @@ import {
 
 import userEvent from '@testing-library/user-event';
 
+import { MemoryRouter } from 'react-router-dom';
+
 import {
     describe,
     it,
@@ -52,6 +54,14 @@ const talhoesMock = [
     },
 ];
 
+function renderizarPainel() {
+    return render(
+        <MemoryRouter>
+            <Inicio />
+        </MemoryRouter>
+    );
+}
+
 // ==========================================
 // US17 - Estados dos talhões
 // ==========================================
@@ -74,7 +84,7 @@ describe('Painel de talhões - US17', () => {
             new Promise(() => {})
         );
 
-        render(<Inicio />);
+        renderizarPainel();
 
         expect(
             screen.getByRole('status')
@@ -87,7 +97,7 @@ describe('Painel de talhões - US17', () => {
             dados: talhoesMock,
         });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         const cards = await screen.findAllByRole('article', {
             name: '',
@@ -110,7 +120,7 @@ describe('Painel de talhões - US17', () => {
             dados: [],
         });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         expect(
             await screen.findByText('Nenhum talhão cadastrado.')
@@ -131,7 +141,7 @@ describe('Painel de talhões - US17', () => {
             dados: talhoesMock,
         });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         expect(
             await screen.findAllByRole('article', {
@@ -146,7 +156,7 @@ describe('Painel de talhões - US17', () => {
             mensagem: 'Falha de conexão.',
         });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         expect(
             await screen.findByRole('alert')
@@ -170,7 +180,7 @@ describe('Painel de talhões - US17', () => {
                 dados: talhoesMock,
             });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         const botao = await screen.findByRole('button', {
             name: 'Tentar novamente',
@@ -193,7 +203,7 @@ describe('Painel de talhões - US17', () => {
             dados: [talhoesMock[1]],
         });
 
-        const { unmount } = render(<Inicio />);
+        const { unmount } = renderizarPainel();
 
         const [cardAntes] = await screen.findAllByRole('article', {
             name: '',
@@ -215,7 +225,7 @@ describe('Painel de talhões - US17', () => {
             ],
         });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         const [cardDepois] = await screen.findAllByRole('article', {
             name: '',
@@ -256,7 +266,7 @@ describe('Painel de talhões - US18', () => {
             dados: talhoesMock,
         });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         const resumo = await screen.findByRole('region', {
             name: 'Resumo dos talhões',
@@ -285,7 +295,7 @@ describe('Painel de talhões - US18', () => {
             dados: talhoesMock,
         });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         await screen.findByRole('heading', {
             name: 'Talhão A1',
@@ -304,7 +314,7 @@ describe('Painel de talhões - US18', () => {
             dados: [],
         });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         const resumo = await screen.findByRole('region', {
             name: 'Resumo dos talhões',
@@ -325,7 +335,7 @@ describe('Painel de talhões - US18', () => {
             mensagem: 'Falha de conexão.',
         });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         await screen.findByRole('alert');
 
@@ -349,7 +359,7 @@ describe('Painel de talhões - US18', () => {
             ],
         });
 
-        const { unmount } = render(<Inicio />);
+        const { unmount } = renderizarPainel();
 
         expect(
             await screen.findByText('100%')
@@ -362,7 +372,7 @@ describe('Painel de talhões - US18', () => {
             dados: talhoesMock,
         });
 
-        render(<Inicio />);
+        renderizarPainel();
 
         const resumo = await screen.findByRole('region', {
             name: 'Resumo dos talhões',
