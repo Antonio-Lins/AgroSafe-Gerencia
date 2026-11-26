@@ -1,0 +1,231 @@
+.painel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.painel-cabecalho {
+    margin-bottom: 0.25rem;
+}
+
+.painel-grid {
+    display: grid;
+    grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, 280px), 1fr)
+  );
+    gap: 1rem;
+}
+
+.painel-talhao {
+    min-width: 0;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-left: 5px solid;
+    border-radius: 12px;
+    background: var(--surface);
+    overflow-wrap: anywhere;
+}
+
+.painel-talhao--livre {
+    border-left-color: var(--green);
+}
+
+.painel-talhao--quarentena {
+    border-left-color: var(--red);
+}
+
+.painel-talhao-cabecalho {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.painel-talhao-cabecalho h2 {
+    font-size: 1.15rem;
+}
+
+.painel-talhao-estado {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.painel-talhao--livre .painel-talhao-estado {
+    background: var(--ok-bg);
+    color: var(--green-d);
+}
+
+.painel-talhao--quarentena .painel-talhao-estado {
+    background: var(--red-bg);
+    color: var(--red);
+}
+
+.painel-talhao-informacoes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: var(--muted);
+}
+
+.painel-talhao-liberacao {
+    color: var(--red);
+}
+
+.painel-vazio {
+    padding: 2rem;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: var(--muted);
+}
+
+@media (max-width: 600px) {
+    .painel-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .painel-talhao {
+        padding: 1rem;
+    }
+}
+
+/* US18 - Contadores do painel */
+
+.painel-resumo {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.painel-contador {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    overflow-wrap: anywhere;
+}
+
+.painel-contador h2 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.painel-contador-valor {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.painel-contador span {
+    font-size: 0.9rem;
+}
+
+.painel-contador-percentual {
+    font-weight: 600;
+}
+
+.painel-contador--livre {
+    background: var(--ok-bg);
+    color: var(--green-d);
+    border-left: 5px solid var(--green);
+}
+
+.painel-contador--quarentena {
+    background: var(--red-bg);
+    color: var(--red);
+    border-left: 5px solid var(--red);
+}
+
+@media (max-width: 600px) {
+    .painel-resumo {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .painel-contador {
+        padding: 1rem;
+    }
+}
+
+/* US19 - Atalhos do painel */
+
+.painel-talhao-acoes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+.painel-atalho {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--green);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.painel-atalho--aplicacao {
+    background: var(--surface);
+    color: var(--green-d);
+}
+
+.painel-atalho--aplicacao:hover {
+    background: var(--ok-bg);
+}
+
+.painel-atalho--colheita {
+    background: var(--green);
+    color: #fff;
+}
+
+.painel-atalho--colheita:not(:disabled):hover {
+    background: var(--green-d);
+}
+
+.painel-atalho:disabled {
+    background: var(--line);
+    border-color: var(--line);
+    color: var(--muted);
+    cursor: not-allowed;
+}
+
+.painel-talhao-bloqueio {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--red);
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+    .painel-talhao-acoes {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .painel-atalho {
+        width: 100%;
+    }
+}
