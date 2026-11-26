@@ -1,0 +1,84 @@
+.colheita {
+    width: 100%;
+    min-width: 0;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.colheita-form {
+    width: 100%;
+    min-width: 0;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+}
+
+.colheita-form input,
+.colheita-form select {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    font: inherit;
+    color: var(--ink);
+}
+
+.colheita-form input[aria-invalid="true"],
+.colheita-form select[aria-invalid="true"] {
+    border-color: var(--red);
+}
+
+.colheita-quarentena {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    background: var(--red-bg);
+    color: var(--red);
+    overflow-wrap: anywhere;
+}
+
+.colheita-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.colheita-acoes button {
+    min-height: 44px;
+}
+
+.colheita-voltar {
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--green-d);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.colheita-voltar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .colheita-form {
+        padding: 1rem;
+    }
+
+    .colheita-acoes {
+        flex-direction: column;
+    }
+
+    .colheita-acoes button {
+        width: 100%;
+    }
+}

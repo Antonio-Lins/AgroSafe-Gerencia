@@ -5,6 +5,7 @@ import Login from './features/auth/pages/Login.jsx';
 import Layout from './shared/components/Layout.jsx';
 import Inicio from './features/home/pages/Inicio.jsx';
 import TalhoesLista from './features/talhoes/pages/TalhoesLista.jsx';
+import RegistrarColheita from './features/colheitas/pages/RegistrarColheita.jsx';
 
 export default function App() {
   return (
@@ -24,6 +25,10 @@ export default function App() {
                     <Route path="talhoes/novo" element={<TalhaoForm />} />
                   </Route>
               */}
+              <Route
+                  path="colheitas/nova"
+                  element={<RegistrarColheita />}
+              />
             </Route>
           </Route>
 
